@@ -1,0 +1,55 @@
+{
+    "name": "node-tfjs-image-classifier",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./build/index.js",
+    "scripts": {
+        "build": "babel src -s -D -d build",
+        "trainfromfiles": "babel-node sample/trainFromFiles.js",
+        "trainfromdata": "babel-node sample/trainFromDataTrain.js",
+        "predict": "babel-node sample/predict.js",
+        "filestodata": "babel-node sample/filesToData.js",
+        "lint": "eslint '**/*.js'",
+        "lint:fix": "eslint '**/*.js' --fix"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/andrehrferreira/node-tfjs-image-classifier.git"
+    },
+    "keywords": [
+        "tensorflow",
+        "mnist"
+    ],
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run lint"
+        }
+    },
+    "author": "Andre Ferreira <andrehrf@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/andrehrferreira/node-tfjs-image-classifier/issues"
+    },
+    "homepage": "https://github.com/andrehrferreira/node-tfjs-image-classifier#readme",
+    "devDependencies": {
+        "@babel/cli": "^7.10.1",
+        "@babel/core": "^7.10.2",
+        "@babel/node": "^7.10.1",
+        "@babel/polyfill": "^7.10.1",
+        "@babel/preset-env": "^7.10.2",
+        "@babel/register": "^7.10.1",
+        "babel-eslint": "^10.1.0",
+        "eslint": "^7.1.0",
+        "husky": "^4.2.5"
+    },
+    "dependencies": {
+        "@tensorflow/tfjs-node": "^2.0.0",
+        "@tensorflow/tfjs-node-gpu": "^2.0.0",
+        "fast-glob": "^3.2.2",
+        "fs-extra": "^9.0.0",
+        "keras-js": "^1.0.3",
+        "minimist": "^1.2.5",
+        "sharp": "^0.25.3",
+        "typedarray-to-buffer": "^3.1.5"
+    }
+}
