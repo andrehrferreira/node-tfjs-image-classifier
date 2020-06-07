@@ -5,6 +5,7 @@
  * @see https://github.com/tensorflow/tfjs-examples/blob/master/mnist/index.js
  * @see https://www.analyticsvidhya.com/blog/2020/02/learn-image-classification-cnn-convolutional-neural-networks-3-datasets/
  * @see https://towardsdatascience.com/image-classification-in-10-minutes-with-mnist-dataset-54c35b77a38d
+ * @see https://github.com/tensorflow/tfjs-examples/blob/master/mnist-node/data.js
  */
 
 import Optimizer from "../Optimizer";

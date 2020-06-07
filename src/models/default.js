@@ -2,8 +2,8 @@ import Optimizer from "../Optimizer";
 const tf = (process.env.gpu === true) ? require("@tensorflow/tfjs-node-gpu") : require("@tensorflow/tfjs-node");
 
 const DefaultOptions = {
-    inputWidth: 224,
-    inputHeight: 224,
+    inputWidth: 32,
+    inputHeight: 32,
     inputChannels: 3,
     learningRate: 0.0001,
     optimizer: "adam"
@@ -20,26 +20,41 @@ class DefaultModel {
 
     generate(outputSize){       
 
-        //Input
-        this.model = tf.sequential({
-            layers: [
-                tf.layers.flatten({ 
-                    inputShape: [this.inputHeight, this.inputWidth, this.inputChannels] 
-                }),
-                tf.layers.dense({ 
-                    units: 64, 
-                    activation: "relu", 
-                    kernelInitializer: "varianceScaling", 
-                    useBias: true 
-                }),
-                tf.layers.dense({ 
-                    units: outputSize, 
-                    kernelInitializer: "varianceScaling",
-                    activation: "softmax",
-                    useBias: false,
-                })
-            ]
-        });
+        this.model = tf.sequential();
+
+        this.model.add(tf.layers.conv2d({
+            inputShape: [this.inputWidth, this.inputHeight, this.inputChannels],
+            kernelSize: 3,
+            padding: "same",
+            filters: 32,
+            strides: 1,
+            activation: "relu",
+            kernelInitializer: "varianceScaling"
+        }));
+
+        this.model.add(tf.layers.maxPooling2d({ poolSize: [2, 2], strides: [2, 2] }));
+        this.model.add(tf.layers.batchNormalization());
+        this.model.add(tf.layers.dropout({ rate: 0.25 }));
+
+        this.model.add(tf.layers.conv2d({
+            kernelSize: 3,
+            filters: 64,
+            padding: "same",
+            strides: 1,
+            activation: "relu",
+            kernelInitializer: "varianceScaling"
+        }));
+
+        this.model.add(tf.layers.maxPooling2d({ poolSize: [2, 2], strides: [2, 2] }));
+        this.model.add(tf.layers.batchNormalization());
+        this.model.add(tf.layers.dropout({ rate: 0.25 }));
+        this.model.add(tf.layers.flatten());
+
+        this.model.add(tf.layers.dense({
+            units: outputSize,
+            kernelInitializer: "varianceScaling",
+            activation: "softmax"
+        }));
  
         //Output
         let optimzer = new Optimizer(this.options);

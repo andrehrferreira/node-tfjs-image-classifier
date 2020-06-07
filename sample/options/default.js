@@ -1,10 +1,10 @@
 module.exports = {
     type: "default",
-    inputWidth: 224,
-    inputHeight: 224,
+    inputWidth: 32,
+    inputHeight: 32,
     inputChannels: 3,
     learningRate: 0.001,
     batchSizeFraction: 0.20,
-    epochs: 200,
+    epochs: 100,
     optimizer: "adam"
 };

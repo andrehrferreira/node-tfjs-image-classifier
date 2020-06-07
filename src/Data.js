@@ -1,6 +1,7 @@
 /**
  * 
  * @see https://github.com/longlost/node-tfjs-retrain/blob/master/data.js
+ * @see https://github.com/GantMan/rps_tfjs_demo/blob/master/src/tfjs/data.js
  */
 
 import path from "path";
@@ -41,18 +42,15 @@ class TFJSData {
 
         try{
             return tf.tidy(() => {
-                // rgba -> rgb / the rest of the pipeline throws if 
-                // alpha channel is present so pull it out and 
-                // keep a shape [1, 224, 224, 3] tensor
                 const outShape = [1, this.inputHeight, this.inputWidth, this.inputChannels];
                 const tensor   = tf.tensor4d(pixelData, outShape, "int32"); 
-                const noAlpha  = this.__stripAlphaChannel(tensor, {
+                /*const noAlpha  = this.__stripAlphaChannel(tensor, {
                     height: this.inputHeight,
                     width: this.inputWidth
-                });
+                });*/
 
-                // Normalize the rgb data from [0, 255] to [-1, 1].
-                const normalized = noAlpha.  
+                const normalized = tensor.  
+                    resizeBilinear([this.inputWidth, this.inputHeight]).
                     toFloat().
                     div(tf.scalar(127)).
                     sub(tf.scalar(1));
@@ -157,7 +155,7 @@ class TFJSData {
         });
     }
 
-    async toTrain(model) {
+    async toTrain(model, retrain = false) {
         let totalImages = this.images.map((item) => item.length).reduce((accumulator, currentValue) => accumulator + currentValue);
         let embeddingsShape = [this.inputHeight, this.inputWidth, this.inputChannels];
         let embeddingsShapeTotal = [totalImages, this.inputHeight, this.inputWidth, this.inputChannels];
@@ -187,15 +185,14 @@ class TFJSData {
             for (let keyImages in this.images[key]) {
                 let tmpBuffer = (typeof this.images[key][keyImages] == "object") ? await this.__bufferToTensor(this.images[key][keyImages]) : await this.__fileToTensor(this.images[key][keyImages]);
                 
-                let prediction = model.predict(tmpBuffer);
+                if(retrain)
+                    embeddings.push(model.predict(tmpBuffer).squeeze());
+                else
+                    embeddings.push(tmpBuffer.squeeze());
+
+                labels.set([key], labelsOffset);
                 tmpBuffer.dispose();
                     
-                //embeddings.push(prediction.squeeze());
-                //labels.set([key], labelsOffset);
-
-                console.log(prediction.squeeze());
-                process.exit(1);
-
                 embeddingsOffset += embeddingsFlatSize;
                 labelsOffset++;  
             }
@@ -209,10 +206,6 @@ class TFJSData {
         try{
             const imagesTensor = tf.stack(embeddings);
             embeddings.forEach(tensor => { tensor.dispose(); });
-            console.log(imagesTensor);
-            
-            console.log(tf.tensor4d(imagesTensor, embeddingsShapeTotal));
-            process.exit(1);
 
             return {
                 images: imagesTensor, //tf.tensor4d(embeddings, embeddingsShape),

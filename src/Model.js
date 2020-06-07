@@ -134,6 +134,9 @@ class TFJSModel{
             this.model = this.modelClass.load(fileOrDirname);
         }
         else{
+            if(!fs.existsSync(fileOrDirname))
+                throw "Model not exists";
+                
             this.model = await tf.loadLayersModel(
                 "file://" + fileOrDirname + "/model.json"
             );
