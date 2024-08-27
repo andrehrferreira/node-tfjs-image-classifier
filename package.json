@@ -20,11 +20,6 @@
         "tensorflow",
         "mnist"
     ],
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm run lint"
-        }
-    },
     "author": "Andre Ferreira <andrehrf@gmail.com>",
     "license": "MIT",
     "bugs": {
@@ -43,13 +38,13 @@
         "husky": "^4.2.5"
     },
     "dependencies": {
-        "@tensorflow/tfjs-node": "^2.0.0",
-        "@tensorflow/tfjs-node-gpu": "^2.0.0",
+        "@tensorflow/tfjs-node": "^4.20.0",
+        "@tensorflow/tfjs-node-gpu": "^4.20.0",
         "fast-glob": "^3.2.2",
         "fs-extra": "^9.0.0",
-        "keras-js": "^1.0.3",
+        "keras-js": "^0.1.0",
         "minimist": "^1.2.5",
-        "sharp": "^0.25.3",
+        "sharp": "^0.33.5",
         "typedarray-to-buffer": "^3.1.5"
     }
 }
